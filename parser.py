@@ -9,6 +9,7 @@ class WebParser:
         self.utils = Utils()
         self.cfg = self.utils.cfg
         self.stocks = self.cfg['stocks'].split(',')
+        #TODO: several urls
         self.url = self.cfg['url']
         self.start_workflow()
 
@@ -35,6 +36,7 @@ class WebParser:
         desc: get web page content from link in config parametr 'url'
               and parse it by tags 'h3' > 'bg-quote'
     '''
+    #TODO: tag changes
     def get_stock_price(self, s):
         url = self.url+s
         try:

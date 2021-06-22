@@ -8,4 +8,6 @@ class Stock(BaseModel):
     timestamp: str
     url: str
 
+#TODO: crypto, indexes, futures
+
 
