@@ -4,7 +4,7 @@ try:
     import os
     import datetime
     import logging
-    import paramiko
+#    import paramiko
     from time import gmtime, strftime, time
     from random import choice
 except ImportError as e:
@@ -73,33 +73,33 @@ class Utils:
 
         return output
 
-    @staticmethod
-    def execute_shell(command):
+#    @staticmethod
+#    def execute_shell(command):
+#
+#        try:
+#            out = subprocess.call(command, shell=True)
+#        except Exception as e:
+#            print('Could not perform command, the wrong command was: ')
+#            print(command)
+#            print('The error was: ' + str(e))
+#            return False
+#
+#        if out == 0:
+#            return True
+#        else:
+#            print("Could not perform command", command)
+#            return False
 
-        try:
-            out = subprocess.call(command, shell=True)
-        except Exception as e:
-            print('Could not perform command, the wrong command was: ')
-            print(command)
-            print('The error was: ' + str(e))
-            return False
-
-        if out == 0:
-            return True
-        else:
-            print("Could not perform command", command)
-            return False
-
-    @staticmethod
-    def remote_sh(self, target_host, command, vm_user, vm_psswd=None, ignore_error=False): 
-        try: 
-            ssh_client = paramiko.SSHClient()
-            ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh_client.connect(hostname=target_host, username=vm_user, password=vm_psswd)
-            stdin, stdout, stderror = ssh_client.exec_command(command)
-        except Exception as e:
-            self._error('Cannot execute powershell command: \n'+command)
-            self._error('[Exception details]\nHost:{}\nError:{}'.format(target_host, str(e)))
+#    @staticmethod
+#    def remote_sh(self, target_host, command, vm_user, vm_psswd=None, ignore_error=False): 
+#        try: 
+#            ssh_client = paramiko.SSHClient()
+#            ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#            ssh_client.connect(hostname=target_host, username=vm_user, password=vm_psswd)
+#            stdin, stdout, stderror = ssh_client.exec_command(command)
+#        except Exception as e:
+#            self._error('Cannot execute powershell command: \n'+command)
+#            self._error('[Exception details]\nHost:{}\nError:{}'.format(target_host, str(e)))
              
     
 
