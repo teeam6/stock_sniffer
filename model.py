@@ -8,6 +8,20 @@ class Stock(BaseModel):
     timestamp: str
     url: str
 
-#TODO: crypto, indexes, futures
+class Crypto(BaseModel):
+    name: str
+    price: float
+    timestamp: str
+    url: str
 
+class Index(BaseModel):
+    name: str
+    price: float
+    timestamp: str
+    url: str
 
+class Future(BaseModel):
+    name: str
+    price: float
+    timestamp: str
+    url: str
