@@ -12,7 +12,7 @@ class WebParser:
         # self.stocks = self.cfg['stocks'].split(',')
         self.index_url = self.cfg['index_url'].split(',')
         self.crypto_url = self.cfg['crypto_url'].split(',')
-        self.future_url = self.cfg['index_url'].split(',')
+        self.future_url = self.cfg['future_url'].split(',')
         self.indexes = self.cfg['indexes'].split(',')
         self.cryptos = self.cfg['cryptos'].split(',')
         self.futures = self.cfg['futures'].split(',')
@@ -91,44 +91,47 @@ class WebParser:
 
     def save_to_csv(self, index_arr, crypto_arr, future_arr):
         dt = pendulum.now()
-        _i = index_arr[0].keys()
-        file_name = 'indexes_{}.csv'.format(dt.format('YYYYMMDD'))
-        file_path = Path(self.cfg['target']+"indexes"+file_name)
-        if file_path.is_file():
-            with open(file_name, 'a', newline='')  as output_file:
-                dict_writer = csv.DictWriter(output_file, _i, delimiter="`")
-                dict_writer.writerows(index_arr)
-        else:
-            with open(file_name, 'w', newline='')  as output_file:
-                dict_writer = csv.DictWriter(output_file, _i, delimiter="`")
-                dict_writer.writeheader()
-                dict_writer.writerows(index_arr)
+        if index_arr:
+            _i = index_arr[0].keys()
+            file_name = 'indexes_{}.csv'.format(dt.format('YYYYMMDD'))
+            file_path = Path(self.cfg['target']+"indexes"+file_name)
+            if file_path.is_file():
+                with open(file_name, 'a', newline='')  as output_file:
+                    dict_writer = csv.DictWriter(output_file, _i, delimiter="`")
+                    dict_writer.writerows(index_arr)
+            else:
+                with open(file_name, 'w', newline='')  as output_file:
+                    dict_writer = csv.DictWriter(output_file, _i, delimiter="`")
+                    dict_writer.writeheader()
+                    dict_writer.writerows(index_arr)
+        
+        if crypto_arr:
+            _c = crypto_arr[0].keys()
+            file_name = 'crypto_{}.csv'.format(dt.format('YYYYMMDD'))
+            file_path = Path(self.cfg['target']+"cryptos"+file_name)
+            if file_path.is_file():
+                with open(file_name, 'a', newline='')  as output_file:
+                    dict_writer = csv.DictWriter(output_file, _c, delimiter="`")
+                    dict_writer.writerows(crypto_arr)
+            else:
+                with open(file_name, 'w', newline='')  as output_file:
+                    dict_writer = csv.DictWriter(output_file, _c, delimiter="`")
+                    dict_writer.writeheader()
+                    dict_writer.writerows(crypto_arr)
 
-        _c = crypto_arr[0].keys()
-        file_name = 'crypto_{}.csv'.format(dt.format('YYYYMMDD'))
-        file_path = Path(self.cfg['target']+"cryptos"+file_name)
-        if file_path.is_file():
-            with open(file_name, 'a', newline='')  as output_file:
-                dict_writer = csv.DictWriter(output_file, _c, delimiter="`")
-                dict_writer.writerows(crypto_arr)
-        else:
-            with open(file_name, 'w', newline='')  as output_file:
-                dict_writer = csv.DictWriter(output_file, _c, delimiter="`")
-                dict_writer.writeheader()
-                dict_writer.writerows(crypto_arr)
-
-        _f = future_arr[0].keys()
-        file_name = 'future_{}.csv'.format(dt.format('YYYYMMDD'))
-        file_path = Path(self.cfg['target']+"futures"+file_name)
-        if file_path.is_file():
-            with open(file_name, 'a', newline='')  as output_file:
-                dict_writer = csv.DictWriter(output_file, _f, delimiter="`")
-                dict_writer.writerows(future_arr)
-        else:
-            with open(file_name, 'w', newline='')  as output_file:
-                dict_writer = csv.DictWriter(output_file, _f, delimiter="`")
-                dict_writer.writeheader()
-                dict_writer.writerows(future_arr)
+        if future_arr:
+            _f = future_arr[0].keys()
+            file_name = 'future_{}.csv'.format(dt.format('YYYYMMDD'))
+            file_path = Path(self.cfg['target']+"futures"+file_name)
+            if file_path.is_file():
+                with open(file_name, 'a', newline='')  as output_file:
+                    dict_writer = csv.DictWriter(output_file, _f, delimiter="`")
+                    dict_writer.writerows(future_arr)
+            else:
+                with open(file_name, 'w', newline='')  as output_file:
+                    dict_writer = csv.DictWriter(output_file, _f, delimiter="`")
+                    dict_writer.writeheader()
+                    dict_writer.writerows(future_arr)
         
 
 
@@ -187,11 +190,12 @@ class WebParser:
         response = self.get_page_content(url)
         try:
             soup = BeautifulSoup(response.content, 'html.parser')
+            price = None
             self.utils._debug("Start parsing")
             result = soup.find_all('h3', class_='intraday__price')
             for i in result:
-                self.utils._debug("Price from {}: {}".format(url, price.text))
                 price = i.find('bg-quote', class_='value')
+                self.utils._debug("Price from {}: {}".format(url, price.text))
             if price:
                 return float(price.text.replace(',', ''))
             else:
@@ -204,10 +208,12 @@ class WebParser:
         response = self.get_page_content(url)
         try:
             soup = BeautifulSoup(response.content, 'html.parser')
+            price = None
             self.utils._debug("Start parsing")
             result = soup.find_all('h3', class_='intraday__price')
             for i in result:
-                tag = 'bg-quote' if 'es00' in url else 'span'
+                # tag = 'bg-quote' if 'es00' in url else 'span'
+                tag = 'span'
                 price = i.find(tag, class_='value')
                 self.utils._debug("Price from {}: {}".format(url, price.text))
             if price:
@@ -225,7 +231,7 @@ class WebParser:
         dt=pendulum.now()
         if dt.hour < 15 or dt.hour > 23:
             _result_hour = False
-        if dt.isoweekday in [6,7]:
+        if dt.isoweekday() in [6,7]:
             _result_day = False
         self.utils._debug('_result_hour: '+str(_result_hour))
         self.utils._debug('_result_day: '+str(_result_day))
