@@ -19,6 +19,10 @@ class WebParser:
         self.start_workflow()
 
     def start_workflow(self):
+        if not self.time_check():
+            self.utils._debug("there is not time yet...")
+            sys.exit(1)
+
         index_arr = []
         for _i in self.indexes:
             url = self.index_url[0]+_i
@@ -186,8 +190,8 @@ class WebParser:
             self.utils._debug("Start parsing")
             result = soup.find_all('h3', class_='intraday__price')
             for i in result:
-                price = i.find('bg-quote', class_='value')
                 self.utils._debug("Price from {}: {}".format(url, price.text))
+                price = i.find('bg-quote', class_='value')
             if price:
                 return float(price.text.replace(',', ''))
             else:
@@ -214,9 +218,19 @@ class WebParser:
         except Exception as e:
             self.utils._error("Cannot obtain price from web page: "+str(e))
 
-    
-    def time_check():
-        pass
+    # @staticmethod
+    def time_check(self):
+        _result_hour = True
+        _result_day = True
+        dt=pendulum.now()
+        if dt.hour < 15 or dt.hour > 23:
+            _result_hour = False
+        if dt.isoweekday in [6,7]:
+            _result_day = False
+        self.utils._debug('_result_hour: '+str(_result_hour))
+        self.utils._debug('_result_day: '+str(_result_day))
+        return _result_day and _result_hour    
+        
         #TODO: check if trades are started
 
 
