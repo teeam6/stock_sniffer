@@ -96,11 +96,11 @@ class WebParser:
             file_name = 'indexes_{}.csv'.format(dt.format('YYYYMMDD'))
             file_path = Path(self.cfg['target']+"indexes"+file_name)
             if file_path.is_file():
-                with open(file_name, 'a', newline='')  as output_file:
+                with open(file_path, 'a', newline='')  as output_file:
                     dict_writer = csv.DictWriter(output_file, _i, delimiter="`")
                     dict_writer.writerows(index_arr)
             else:
-                with open(file_name, 'w', newline='')  as output_file:
+                with open(file_path, 'w', newline='')  as output_file:
                     dict_writer = csv.DictWriter(output_file, _i, delimiter="`")
                     dict_writer.writeheader()
                     dict_writer.writerows(index_arr)
@@ -110,11 +110,11 @@ class WebParser:
             file_name = 'crypto_{}.csv'.format(dt.format('YYYYMMDD'))
             file_path = Path(self.cfg['target']+"cryptos"+file_name)
             if file_path.is_file():
-                with open(file_name, 'a', newline='')  as output_file:
+                with open(file_path, 'a', newline='')  as output_file:
                     dict_writer = csv.DictWriter(output_file, _c, delimiter="`")
                     dict_writer.writerows(crypto_arr)
             else:
-                with open(file_name, 'w', newline='')  as output_file:
+                with open(file_path, 'w', newline='')  as output_file:
                     dict_writer = csv.DictWriter(output_file, _c, delimiter="`")
                     dict_writer.writeheader()
                     dict_writer.writerows(crypto_arr)
@@ -124,11 +124,11 @@ class WebParser:
             file_name = 'future_{}.csv'.format(dt.format('YYYYMMDD'))
             file_path = Path(self.cfg['target']+"futures"+file_name)
             if file_path.is_file():
-                with open(file_name, 'a', newline='')  as output_file:
+                with open(file_path, 'a', newline='')  as output_file:
                     dict_writer = csv.DictWriter(output_file, _f, delimiter="`")
                     dict_writer.writerows(future_arr)
             else:
-                with open(file_name, 'w', newline='')  as output_file:
+                with open(file_path, 'w', newline='')  as output_file:
                     dict_writer = csv.DictWriter(output_file, _f, delimiter="`")
                     dict_writer.writeheader()
                     dict_writer.writerows(future_arr)
