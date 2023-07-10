@@ -3,3 +3,5 @@ __*
 .vscode
 __*
 config_dump
+__pycache__
+src/lib/stock_sniffer.cfg

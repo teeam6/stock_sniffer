@@ -23,3 +23,7 @@ class DBConnector:
     def truncate_table(self,table_object):
         self.session.query(table_object).delete()
 
+    def delete_record(self, record):
+        self.session.delete(record)
+        self.session.commit()
+
